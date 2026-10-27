@@ -126,6 +126,67 @@ client.close()
 server.close()
 ```
 
+## udp_server.py
+~~~
+import socket
+
+# Create a UDP socket
+server = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
+server.bind(('localhost', 9999))
+print("UDP Server listening on ('localhost', 9999)...")
+
+done = False
+
+while not done:
+    # Receive message and client's dynamic address
+    data, client_addr = server.recvfrom(1024)
+    msg = data.decode('utf-8')
+
+    if msg == 'quit':
+        done = True
+    else:
+        print(f"Client ({client_addr}): {msg}")
+
+    # Reply to the specific client address
+    reply = input("Message: ")
+    server.sendto(reply.encode('utf-8'), client_addr)
+    if reply == 'quit':
+        done = True
+
+server.close()
+~~~
+
+## udp_client.py
+~~~
+import socket
+
+# Create a UDP socket
+client = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
+server_addr = ("localhost", 9999)
+
+done = False
+
+while not done:
+    # Send message directly to server
+    out_msg = input("Message: ")
+    client.sendto(out_msg.encode('utf-8'), server_addr)
+
+    if out_msg == 'quit':
+        done = True
+        break
+
+    # Receive response from server
+    data, _ = client.recvfrom(1024)
+    msg = data.decode('utf-8')
+
+    if msg == 'quit':
+        done = True
+    else:
+        print(f"Server: {msg}")
+
+client.close()
+~~~
+
 ## OUTPUT:
 <img width="442" height="147" alt="image" src="https://github.com/user-attachments/assets/6addb887-53d4-46de-9bc6-0dea1610b708" />
 <img width="398" height="172" alt="image" src="https://github.com/user-attachments/assets/a8ea4ee3-3c9b-46ce-b126-809b267f5491" />
