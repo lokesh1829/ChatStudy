@@ -103,8 +103,6 @@ client.close()
 ### `server.py`
 ```python
 import socket
-from base64 import decode
-from operator import truediv
 
 server =socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 server.bind(('localhost', 9999))
